@@ -1,0 +1,491 @@
+{
+	"actions": {
+		"_update_from_webchat": {
+			"name": "_update_from_webchat",
+			"__key": "_update_from_webchat",
+			"to_state": {},
+			"fields": {},
+			"notifications": {
+				"if_webchat_client_config_switch_whatsapp_send_webchat_message": {
+					"conditions": [
+						"stubpost.data._incoming_webchat_data.webchat_client_configuration.platform_switch.platform_name = \"whatsapp\""
+					],
+					"platforms": {
+						"webchat": {
+							"sessionuuid": "~~stub.data.webchat_sessionuuid",
+							"webchat_message": {
+								"type": "markdown",
+								"value": "### Switched to Whatsapp  \nMobile Number : {{stubpost.data._incoming_webchat_data.webchat_client_configuration.platform_switch.value}}"
+							},
+							"stubsession": {
+								"set_new_with_timeout_hours": 24
+							}
+						}
+					},
+					"name": "if_webchat_client_config_switch_whatsapp_send_webchat_message",
+					"__key": "if_webchat_client_config_switch_whatsapp_send_webchat_message",
+					"__renamed": false
+				},
+				"if_webchat_client_config_switch_email_send_webchat_message": {
+					"conditions": [
+						"stubpost.data._incoming_webchat_data.webchat_client_configuration.platform_switch.platform_name = \"email\""
+					],
+					"platforms": {
+						"webchat": {
+							"sessionuuid": "~~stub.data.webchat_sessionuuid",
+							"webchat_message": {
+								"type": "markdown",
+								"value": "### Switched to Email\nEmail : {{stubpost.data._incoming_webchat_data.webchat_client_configuration.platform_switch.value}}"
+							},
+							"stubsession": {
+								"set_new_with_timeout_hours": 24
+							}
+						}
+					},
+					"name": "if_webchat_client_config_switch_email_send_webchat_message",
+					"__key": "if_webchat_client_config_switch_email_send_webchat_message",
+					"__renamed": false
+				}
+			},
+			"tasks": {
+				"default_to_webchat_communication_channel": {
+					"tasktype": "savedata",
+					"params": {
+						"fieldname": "communication_channel",
+						"savevalue": "webchat"
+					},
+					"name": "default_to_webchat_communication_channel",
+					"__key": "default_to_webchat_communication_channel",
+					"__order": 0
+				},
+				"reply_gpt": {
+					"tasktype": "gpt_chat_task",
+					"taskapigatewayuuid": "e366a208-63a2-48ea-af74-e3e0abf703b4",
+					"conditions": ["stubpost.message != \"\""],
+					"params": {
+						"message_operation": "append",
+						"messages": [
+							{
+								"role": "user",
+								"content": "{{{stubpost.message}}}\n\n{{#if stubpost.data._incoming_webchat_data.webchat_control_event.current_page}}\n<user_current_page>\n{{stubpost.data._incoming_webchat_data.webchat_control_event.current_page}}\n</user_current_page>\n{{/if}}"
+							}
+						],
+						"temperature": 0.7,
+						"submit_to_model": true,
+						"stop_on_high_messages": true,
+						"stop_on_high_interactions": true,
+						"model": "",
+						"chat_name": "main",
+						"max_tokens": "",
+						"set_system_message": "",
+						"set_model": "",
+						"assistant_response_action_name": ""
+					},
+					"name": "reply_gpt",
+					"__key": "reply_gpt",
+					"help": "",
+					"__order": 1
+				},
+				"if_control_event_only": {
+					"tasktype": "gpt_chat_task",
+					"taskapigatewayuuid": "e366a208-63a2-48ea-af74-e3e0abf703b4",
+					"params": {
+						"messages": [
+							{
+								"role": "system",
+								"content": "The customer just added the following item to the cart : \n\n{{#to_json_string stubpost.data._incoming_webchat_data.webchat_control_event.product}}{{/to_json_string}}"
+							}
+						],
+						"temperature": 0.7,
+						"submit_to_model": true,
+						"stop_on_high_messages": true,
+						"stop_on_high_interactions": true,
+						"model": "",
+						"chat_name": "",
+						"max_tokens": "",
+						"message_operation": "append",
+						"set_system_message": "",
+						"set_model": "",
+						"assistant_response_action_name": ""
+					},
+					"name": "if_control_event_only",
+					"__key": "if_control_event_only",
+					"__order": 2,
+					"help": "",
+					"conditions": [
+						"stubpost.tasks.reply_gpt.success = false",
+						"$exists(stubpost.data._incoming_webchat_data.webchat_control_event)"
+					]
+				}
+			},
+			"metrics": {},
+			"details": {
+				"description": ""
+			},
+			"structure": {
+				"position": {
+					"left": 740,
+					"top": 780
+				},
+				"meta": {
+					"new": false
+				}
+			},
+			"action_meta": {
+				"ai_details": {}
+			}
+		},
+		"_update_from_chat_assistant_task": {
+			"notifications": {
+				"webchat_text_message": {
+					"platforms": {
+						"webchat": {
+							"sessionuuid": "~~stub.data._incoming_webchat_data.sessionuuid",
+							"webchat_message": {
+								"type": "markdown",
+								"value": "~~stubpost.message"
+							},
+							"stubsession": {
+								"set_new_with_timeout_hours": 24
+							}
+						}
+					},
+					"name": "webchat_text_message",
+					"__key": "webchat_text_message",
+					"help": "",
+					"conditions": []
+				}
+			},
+			"structure": {
+				"position": {
+					"left": 740,
+					"top": 880
+				},
+				"meta": {
+					"new": false
+				}
+			},
+			"name": "_update_from_chat_assistant_task",
+			"__key": "_update_from_chat_assistant_task",
+			"fields": {},
+			"metrics": {},
+			"tasks": {},
+			"details": {
+				"description": ""
+			},
+			"to_state": {},
+			"action_meta": {
+				"ai_details": {}
+			}
+		},
+		"_create": {
+			"tasks": {
+				"start_gpt_ai_assistant": {
+					"tasktype": "gpt_chat_task",
+					"taskapigatewayuuid": "e366a208-63a2-48ea-af74-e3e0abf703b4",
+					"params": {
+						"model": "gpt-4o",
+						"submit_to_model": false,
+						"message_operation": "set",
+						"messages": [
+							{
+								"role": "system",
+								"content": "~~template.data.prompts.system"
+							}
+						],
+						"temperature": 0.7,
+						"stop_on_high_messages": true,
+						"stop_on_high_interactions": true,
+						"chat_name": "main",
+						"max_tokens": "",
+						"set_system_message": "",
+						"set_model": "",
+						"assistant_response_action_name": ""
+					},
+					"name": "start_gpt_ai_assistant",
+					"__key": "start_gpt_ai_assistant",
+					"help": "",
+					"conditions": []
+				},
+				"if_webchat_send_update": {
+					"tasktype": "sendaction",
+					"params": {
+						"action_name": "_update_from_webchat",
+						"data": {
+							"_incoming_webchat_data": "~~stub.data._incoming_webchat_data"
+						},
+						"message": "~~stub.data.webchat_customer_first_message",
+						"stubref": "~~stub.stubref",
+						"stubrefs": [],
+						"bulk_action": ""
+					},
+					"name": "if_webchat_send_update",
+					"__key": "if_webchat_send_update",
+					"help": "",
+					"conditions": ["$exists(stub.data.webchat_customer_first_message)"]
+				}
+			},
+			"structure": {
+				"position": {
+					"left": 380,
+					"top": 820
+				},
+				"meta": {
+					"new": false
+				}
+			},
+			"name": "_create",
+			"__key": "_create",
+			"fields": {},
+			"notifications": {},
+			"metrics": {},
+			"details": {
+				"description": ""
+			},
+			"to_state": {},
+			"action_meta": {
+				"ai_details": {}
+			}
+		},
+		"_update": {
+			"tasks": {
+				"respond_to_ai_assistant": {
+					"tasktype": "gpt_chat_task",
+					"taskapigatewayuuid": "e366a208-63a2-48ea-af74-e3e0abf703b4",
+					"params": {
+						"model": "gpt-4o",
+						"submit_to_model": true,
+						"message_operation": "append",
+						"messages": [
+							{
+								"role": "user",
+								"content": "~~stubpost.message"
+							}
+						],
+						"temperature": 0.7,
+						"stop_on_high_messages": true,
+						"stop_on_high_interactions": true,
+						"chat_name": "main",
+						"max_tokens": "",
+						"set_system_message": "",
+						"set_model": "",
+						"assistant_response_action_name": ""
+					},
+					"name": "respond_to_ai_assistant",
+					"__key": "respond_to_ai_assistant",
+					"help": "",
+					"conditions": []
+				}
+			},
+			"structure": {
+				"position": {
+					"left": 740,
+					"top": 980
+				},
+				"meta": {
+					"new": false
+				}
+			},
+			"name": "_update",
+			"__key": "_update",
+			"fields": {},
+			"notifications": {},
+			"metrics": {},
+			"details": {
+				"description": ""
+			},
+			"to_state": {},
+			"action_meta": {
+				"ai_details": {}
+			}
+		},
+		"navigate_to_page": {
+			"name": "navigate_to_page",
+			"__key": "navigate_to_page",
+			"to_state": {},
+			"fields": {
+				"page": {
+					"fieldtype": "select",
+					"params": {
+						"options": [
+							{
+								"label": "tvs",
+								"value": "tvs"
+							},
+							{
+								"label": "laptops",
+								"value": "laptops"
+							},
+							{
+								"label": "phones",
+								"value": "phones"
+							}
+						]
+					},
+					"name": "page",
+					"__key": "page",
+					"title": "",
+					"hide_label": false,
+					"without_value_details": false,
+					"help": "",
+					"details": {
+						"keyname": "",
+						"datapath": ""
+					},
+					"conditions": [],
+					"validations": [],
+					"initvalue": {
+						"has_default": false,
+						"has_override": false
+					}
+				}
+			},
+			"notifications": {
+				"webchat_out_message": {
+					"platforms": {
+						"webchat": {
+							"sessionuuid": "~~stub.data._incoming_webchat_data.sessionuuid",
+							"webchat_control_event": {
+								"page": "~~stubpost.data.page"
+							},
+							"stubsession": {
+								"set_new_with_timeout_hours": 24
+							}
+						}
+					},
+					"name": "webchat_out_message",
+					"__key": "webchat_out_message",
+					"help": "",
+					"conditions": []
+				}
+			},
+			"tasks": {},
+			"metrics": {},
+			"details": {
+				"description": "Use this to trigger the page the user is on to navigate to the product category.",
+				"menu_categories": {}
+			},
+			"structure": {
+				"position": {
+					"left": 820,
+					"top": 600
+				},
+				"meta": {
+					"new": false
+				}
+			},
+			"action_meta": {
+				"ai_details": {
+					"action_result_inject_data": {
+						"navigation_status": "success"
+					},
+					"allowed_chat_names": ["main"]
+				},
+				"ai_function_calling": true,
+				"webhooks": {
+					"enable": false
+				}
+			}
+		}
+	},
+	"states": {
+		"done": {
+			"name": "done",
+			"structure": {
+				"meta": {
+					"is_done": true,
+					"new": false
+				},
+				"position": {
+					"left": 2360,
+					"top": 620
+				}
+			},
+			"actions": [],
+			"__key": "done",
+			"details": {},
+			"state_hooks": {
+				"on_enter_state": {
+					"tasks": {},
+					"notifications": {},
+					"metrics": {}
+				},
+				"in_state": {
+					"tasks": {},
+					"notifications": {},
+					"metrics": {}
+				},
+				"on_exit_state": {
+					"tasks": {},
+					"notifications": {},
+					"metrics": {}
+				}
+			}
+		},
+		"active": {
+			"name": "active",
+			"__key": "active",
+			"actions": ["navigate_to_page", "_create"],
+			"structure": {
+				"position": {
+					"left": 380,
+					"top": 600
+				},
+				"meta": {
+					"new": false
+				}
+			},
+			"details": {},
+			"state_hooks": {
+				"on_enter_state": {
+					"tasks": {},
+					"notifications": {},
+					"metrics": {}
+				},
+				"in_state": {
+					"tasks": {},
+					"notifications": {},
+					"metrics": {}
+				},
+				"on_exit_state": {
+					"tasks": {},
+					"notifications": {},
+					"metrics": {}
+				}
+			}
+		}
+	},
+	"annotations": {
+		"gBGvBEGgIQ": {
+			"name": "gBGvBEGgIQ",
+			"__key": "gBGvBEGgIQ",
+			"type": "data_text",
+			"params": {
+				"title": "prompts.system",
+				"size": "large",
+				"content_type": "text/json",
+				"content": "",
+				"template_data_path": "prompts.system"
+			},
+			"structure": {
+				"position": {
+					"top": 40,
+					"left": 1280
+				},
+				"meta": {
+					"new": false
+				}
+			}
+		}
+	},
+	"details": {
+		"busy_start_state": "active"
+	},
+	"data": {
+		"prompts": {
+			"generate_products_html": "You are a webdesigner that drafts HTML for a page to recommend hardware products.\nYou should draft HTML to recommend products related to the user's query.\n\nYou are creative and use CSS to style your elements.\nYou sometimes put the products in a div, sometimes in a table.\nSometimes you even use flexbox.\n\nPlease draft the innerHTML to inject into an already existing div element.\n\nThe following items to are to be shown to the user :",
+			"system": "You are a helpful eCommerce web site assistant.\nYou discuss requirements with a customer and recommend products.\n\n# Products\nThe store sells the following products in 3 categories\n\n## TVs\n65\" 4K OLED Smart TV - $1299.99\n55\" QLED Gaming TV - $899.99\n75\" 8K LED Smart TV - $2499.99\n\n## Laptops\nUltra-Slim Gaming Laptop - $1499.99\nBusiness Ultrabook - $1199.99\nCreative Pro Laptop - $1799.99\n\n## Mobile Phones\nPro Max Smartphone - $999.99\nUltra 5G Phone - $899.99\nLite 5G Phone - $699.99\n\n# Instructions\nGreet the customer and welcome them to the store, offer to assist them to find what they are looking for.\nUse the navigate_to_page action to navigate to the correct page on the eCommerce site, this will allow the user to see what you are recommending.\n\nYou are now ready to assist the customer, be friendly and helpful."
+		},
+		"false": ""
+	}
+}

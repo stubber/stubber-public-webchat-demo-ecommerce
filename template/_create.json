@@ -1,0 +1,152 @@
+{
+	"actions": {
+		"create_new_stub": {
+			"__key": "create_new_stub",
+			"name": "create_new_stub",
+			"fields": {},
+			"notifications": {},
+			"metrics": {},
+			"tasks": {},
+			"details": {
+				"description": ""
+			},
+			"structure": {
+				"position": {
+					"left": 560,
+					"top": 240
+				},
+				"meta": {
+					"new": false
+				}
+			},
+			"to_state": {},
+			"action_meta": {}
+		},
+		"_update_from_webchat": {
+			"name": "_update_from_webchat",
+			"__key": "_update_from_webchat",
+			"to_state": {},
+			"fields": {},
+			"notifications": {},
+			"tasks": {
+				"create_stub_with_data": {
+					"tasktype": "create_stub",
+					"params": {
+						"templateuuid": "~~template.templateuuid",
+						"template_branch": "~~template.branch",
+						"template_context": "default",
+						"subject": "Webchat {{stubpost.data._incoming_webchat_data.sessionuuid}}",
+						"data": {
+							"webchat_sessionuuid": "~~stubpost.data._incoming_webchat_data.sessionuuid",
+							"webchat_customer_first_message": "~~stubpost.data._incoming_webchat_data.webchat_message.value",
+							"communication_channel": "webchat",
+							"_incoming_webchat_data": "~~stubpost.data._incoming_webchat_data"
+						}
+					},
+					"name": "create_stub_with_data",
+					"__key": "create_stub_with_data",
+					"help": "",
+					"conditions": []
+				},
+				"set_message_prepend": {
+					"tasktype": "set_message",
+					"params": {
+						"message": "Website Chat initiated a conversation with : ",
+						"method": "prepend"
+					},
+					"name": "set_message_prepend",
+					"__key": "set_message_prepend"
+				}
+			},
+			"metrics": {},
+			"details": {
+				"description": ""
+			},
+			"structure": {
+				"position": {
+					"left": 560,
+					"top": 340
+				},
+				"meta": {
+					"new": false
+				}
+			},
+			"action_meta": {
+				"ai_details": {}
+			}
+		}
+	},
+	"states": {
+		"active": {
+			"name": "active",
+			"_key": "active",
+			"details": {},
+			"actions": ["create_new_stub"],
+			"structure": {
+				"position": {
+					"left": 94,
+					"top": 236
+				},
+				"meta": {
+					"new": false
+				}
+			},
+			"__key": "active",
+			"state_hooks": {
+				"on_enter_state": {
+					"tasks": {},
+					"notifications": {},
+					"metrics": {}
+				},
+				"in_state": {
+					"tasks": {},
+					"notifications": {},
+					"metrics": {}
+				},
+				"on_exit_state": {
+					"tasks": {},
+					"notifications": {},
+					"metrics": {}
+				}
+			}
+		},
+		"done": {
+			"name": "done",
+			"__key": "done",
+			"structure": {
+				"meta": {
+					"is_done": true,
+					"new": false
+				},
+				"position": {
+					"left": 1340,
+					"top": 320
+				}
+			},
+			"actions": [],
+			"details": {},
+			"state_hooks": {
+				"on_enter_state": {
+					"tasks": {},
+					"notifications": {},
+					"metrics": {}
+				},
+				"in_state": {
+					"tasks": {},
+					"notifications": {},
+					"metrics": {}
+				},
+				"on_exit_state": {
+					"tasks": {},
+					"notifications": {},
+					"metrics": {}
+				}
+			}
+		}
+	},
+	"annotations": {},
+	"details": {
+		"busy_start_state": "active"
+	},
+	"data": {}
+}
