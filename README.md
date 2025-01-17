@@ -8,6 +8,8 @@ The demo shows :
 2. Passing of page context with every chat message from the page
 3. Triggering of events from the page to the Stubber Agent Flow
 
+![Example Webchat Demo](webchat_demo_ecom_example.png)
+
 ## Installation
 
 Installation consists of setting up the Stubber webchat profile, the Stubber template and installing the demo site.
