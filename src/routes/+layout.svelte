@@ -11,13 +11,13 @@
 	//need to import the environment variables into the svelte component
 	console.log(import.meta.env.VITE_PUBLIC_STUBBER_WEBCHAT_PROFILE_UUID);
 	console.log(import.meta.env.VITE_PUBLIC_STUBBER_WEBCHAT_PROFILE_BRANCH);
-	const profile_uuid = import.meta.env.VITE_PUBLIC_STUBBER_WEBCHAT_PROFILE_UUID;
-	const branch = import.meta.env.VITE_PUBLIC_STUBBER_WEBCHAT_PROFILE_BRANCH;
+	let profile_uuid = import.meta.env.VITE_PUBLIC_STUBBER_WEBCHAT_PROFILE_UUID;
+	let branch = import.meta.env.VITE_PUBLIC_STUBBER_WEBCHAT_PROFILE_BRANCH;
 
 	//get the profile_uuid and branch from the URL query params
 	const urlParams = new URLSearchParams(window.location.search);
-	const profile_uuid_url = urlParams.get('profile_uuid');
-	const branch_url = urlParams.get('branch');
+	let profile_uuid_url = urlParams.get('profile_uuid');
+	let branch_url = urlParams.get('branch');
 	//Override the profile_uuid and branch if they are passed in the URL
 	if (profile_uuid_url) {
 		profile_uuid = profile_uuid_url;
