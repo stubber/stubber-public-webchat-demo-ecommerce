@@ -5,6 +5,12 @@
 	import { navigateTo } from '$lib/utils/navigation';
 	import { page } from '$app/stores';
 
+	//set prerender false
+	export let prerender = false;
+
+	// Get URL query parameters using $page store
+	$: category = $page.url.searchParams.get('category') || 'TVs';
+
 	//need to import the environment variables into the svelte component
 	console.log(import.meta.env.VITE_PUBLIC_STUBBER_WEBCHAT_PROFILE_UUID);
 	console.log(import.meta.env.VITE_PUBLIC_STUBBER_WEBCHAT_PROFILE_BRANCH);
