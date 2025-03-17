@@ -14,18 +14,6 @@
 	let profile_uuid = import.meta.env.VITE_PUBLIC_STUBBER_WEBCHAT_PROFILE_UUID;
 	let branch = import.meta.env.VITE_PUBLIC_STUBBER_WEBCHAT_PROFILE_BRANCH;
 
-	//get the profile_uuid and branch from the URL query params
-	const urlParams = new URLSearchParams(window.location.search);
-	let profile_uuid_url = urlParams.get('profile_uuid');
-	let branch_url = urlParams.get('branch');
-	//Override the profile_uuid and branch if they are passed in the URL
-	if (profile_uuid_url) {
-		profile_uuid = profile_uuid_url;
-	}
-	if (branch_url) {
-		branch = branch_url;
-	}
-
 	/** @type {import('./$types').LayoutData} */
 	export let data;
 </script>
