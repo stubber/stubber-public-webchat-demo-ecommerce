@@ -5,9 +5,6 @@
 	import { navigateTo } from '$lib/utils/navigation';
 	import { page } from '$app/stores';
 
-	//disable prerendering
-	export let prerendering = false;
-
 	//need to import the environment variables into the svelte component
 	console.log(import.meta.env.VITE_PUBLIC_STUBBER_WEBCHAT_PROFILE_UUID);
 	console.log(import.meta.env.VITE_PUBLIC_STUBBER_WEBCHAT_PROFILE_BRANCH);
